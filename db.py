@@ -1,0 +1,35 @@
+from contextlib import contextmanager
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
+from typing_extensions import Generator
+
+from .config import get_db_url
+
+engine = create_engine(
+    get_db_url(),
+    pool_pre_ping=True,
+    pool_recycle=1800,
+    pool_size=5,
+    max_overflow=5,
+)
+
+SessionFactory = sessionmaker(bind=engine, expire_on_commit=False)
+
+@contextmanager
+def session_scope() -> Generator[Session]:
+    session = SessionFactory()
+    try:
+        yield session
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+
+"""
+    contextmanager + func essence and purpose
+    Generator Iterator, why replace Iterator
+"""
