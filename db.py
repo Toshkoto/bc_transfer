@@ -17,7 +17,7 @@ engine = create_engine(
 SessionFactory = sessionmaker(bind=engine, expire_on_commit=False)
 
 @contextmanager
-def session_scope() -> Generator[Session]:
+def session_scope() -> Iterator[Session]:
     session = SessionFactory()
     try:
         yield session
