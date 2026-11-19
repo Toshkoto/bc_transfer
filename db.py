@@ -2,7 +2,7 @@ from contextlib import contextmanager
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
-from typing_extensions import Generator
+from collections.abc import Iterator
 
 from .config import get_db_url
 
